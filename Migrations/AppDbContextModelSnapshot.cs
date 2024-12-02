@@ -119,53 +119,6 @@ namespace ChocolateFactoryApi.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            Email = "Manager@factory.com",
-                            IsActive = true,
-                            PasswordHash = "$2a$11$cgIIqNPh6ueOB.L.lWPKv.0mXC5fIC4yAGq0L1sRzVrZUbx5cs97u",
-                            Role = "FactorManager",
-                            UserName = "Manager"
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            Email = "Quality@factory.com",
-                            IsActive = true,
-                            PasswordHash = "$2a$11$Xgyzjmax5BeNatMlex74Xuiyeo9B/m/xxZ3mFFCipORvQE3JuLv4S",
-                            Role = "QualityController",
-                            UserName = "quality"
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            Email = "supervisor@factory.com",
-                            IsActive = true,
-                            PasswordHash = "$2a$11$F25ylK0PsWcn0teYn17B6eVr4cylSXyy0txjJ8/UZHFXraPXwyMwS",
-                            Role = "ProductionSupervisor",
-                            UserName = "supervisor"
-                        },
-                        new
-                        {
-                            UserId = 4,
-                            Email = "warehouse@factory.com",
-                            IsActive = true,
-                            PasswordHash = "$2a$11$uJhN5VF/O1s5/z5tgrfEtOq9W.JuVpOo73hjnFkrPTTprLdzIDI46",
-                            Role = "warehouseStaff",
-                            UserName = "warehouse"
-                        },
-                        new
-                        {
-                            UserId = 5,
-                            Email = "sales@factory.com",
-                            IsActive = true,
-                            PasswordHash = "$2a$11$7X.3U4wgVpL3WD8dMYD6DOOKeZZlLvtaZImjboEKEmOEV2Dj1iP82",
-                            Role = "SalesRepresentative",
-                            UserName = "sales"
-                        });
                 });
 #pragma warning restore 612, 618
         }

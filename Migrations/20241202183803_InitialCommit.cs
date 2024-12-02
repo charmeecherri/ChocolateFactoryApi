@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace ChocolateFactoryApi.Migrations
 {
     /// <inheritdoc />
-    public partial class IntialCommit : Migration
+    public partial class InitialCommit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,18 +62,6 @@ namespace ChocolateFactoryApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "UserId", "Email", "IsActive", "PasswordHash", "Role", "UserName" },
-                values: new object[,]
-                {
-                    { 1, "Manager@factory.com", true, "$2a$11$cgIIqNPh6ueOB.L.lWPKv.0mXC5fIC4yAGq0L1sRzVrZUbx5cs97u", "FactorManager", "Manager" },
-                    { 2, "Quality@factory.com", true, "$2a$11$Xgyzjmax5BeNatMlex74Xuiyeo9B/m/xxZ3mFFCipORvQE3JuLv4S", "QualityController", "quality" },
-                    { 3, "supervisor@factory.com", true, "$2a$11$F25ylK0PsWcn0teYn17B6eVr4cylSXyy0txjJ8/UZHFXraPXwyMwS", "ProductionSupervisor", "supervisor" },
-                    { 4, "warehouse@factory.com", true, "$2a$11$uJhN5VF/O1s5/z5tgrfEtOq9W.JuVpOo73hjnFkrPTTprLdzIDI46", "warehouseStaff", "warehouse" },
-                    { 5, "sales@factory.com", true, "$2a$11$7X.3U4wgVpL3WD8dMYD6DOOKeZZlLvtaZImjboEKEmOEV2Dj1iP82", "SalesRepresentative", "sales" }
                 });
         }
 
