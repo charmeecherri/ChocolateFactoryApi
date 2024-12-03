@@ -14,6 +14,6 @@ namespace ChocolateFactoryApi.Models
 
         public string Email { get; set; }
         public bool IsActive { get; set; }
-        public string Name { get; internal set; }
+        public string Name { get; set; }
     }
 }

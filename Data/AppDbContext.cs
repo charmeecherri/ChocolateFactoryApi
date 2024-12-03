@@ -14,6 +14,11 @@ namespace ChocolateFactoryApi.Data
         public DbSet<RawMaterial> RawMaterials { get; set; }
         public DbSet<ProductionSchedule> ProductionSchedules { get; set; }
 
+        public DbSet<Recipe> Recipes { get; set; }
+
+
+  
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -24,6 +29,7 @@ namespace ChocolateFactoryApi.Data
             .HasPrecision(18, 2);
 
         }
+
 
 
     }

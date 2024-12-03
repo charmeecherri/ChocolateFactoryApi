@@ -17,7 +17,7 @@ namespace ChocolateFactoryApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RawMaterial>>> GetMaterials()
+        public async Task<ActionResult<IEnumerable<RawMaterial>>> GetRawMaterials()
         {
             return await context.RawMaterials.ToListAsync();
         }
@@ -26,7 +26,7 @@ namespace ChocolateFactoryApi.Controllers
         {
             context.RawMaterials.Add(material);
             await context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetMaterials),new { id = material.MaterialId },material);
+            return CreatedAtAction(nameof(GetRawMaterials),new { id = material.MaterialId },material);
         }
 
         [HttpPut("{id}")]

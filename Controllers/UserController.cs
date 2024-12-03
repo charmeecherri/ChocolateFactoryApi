@@ -27,13 +27,6 @@ namespace ChocolateFactoryApi.Controllers
             return await context.Users.ToListAsync();
         }
 
-        //[HttpPost("register")]
-        //public IActionResult Register(User user)
-        //{
-        //    if (_userService.RegisterUser(user))
-        //        return Ok("User registered successfully!");
-        //    return BadRequest("Email already exists.");
-        //}
 
         [HttpPost]
         public async Task<ActionResult<User>> CreatedUser(User user)
