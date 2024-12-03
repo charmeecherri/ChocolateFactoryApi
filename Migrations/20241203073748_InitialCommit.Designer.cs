@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChocolateFactoryApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241202183803_InitialCommit")]
+    [Migration("20241203073748_InitialCommit")]
     partial class InitialCommit
     {
         /// <inheritdoc />
