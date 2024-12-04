@@ -4,7 +4,8 @@ namespace ChocolateFactoryApi.Models
 {
     public class RawMaterial
     {
-        [Key]public int MaterialId {  get; set; }
+        [Key]
+        public int MaterialId {  get; set; }
 
         public string Name {  get; set; }
 
@@ -17,5 +18,8 @@ namespace ChocolateFactoryApi.Models
         public int SuppilerId {  get; set; }
 
         public decimal CostPerUnit {  get; set; }
+
+        public List<Ingredients> Ingredients { get; set; }
+
     }
 }

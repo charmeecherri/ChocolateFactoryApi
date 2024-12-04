@@ -9,8 +9,8 @@ namespace ChocolateFactoryApi.Models
 
         public int ProductId { get; set; }
 
-        public string Ingredients { get; set; } 
-        public string QuantityPerBatch { get; set; }
+        public List<Ingredients> Ingredients { get; set; } 
+        public string QuantityPerBatch { get; set; }    
 
         public string Instructions { get; set; }
     }

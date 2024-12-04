@@ -1,5 +1,8 @@
 ﻿using ChocolateFactoryApi.Data;
+using ChocolateFactoryApi.DTO.request;
 using ChocolateFactoryApi.Models;
+using ChocolateFactoryApi.repositories;
+using ChocolateFactoryApi.repositories.interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,40 +13,37 @@ namespace ChocolateFactoryApi.Controllers
     [ApiController]
     public class RawMaterialController : ControllerBase
     {
-        private readonly AppDbContext context;
-        public RawMaterialController(AppDbContext context)
+        private readonly IRawMaterialRepository _rawMaterialRepository;
+
+        public RawMaterialController(IRawMaterialRepository rawMaterialRepository)
         {
-            this.context = context;
+            _rawMaterialRepository = rawMaterialRepository;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RawMaterial>>> GetRawMaterials()
+        public async Task<IActionResult> getRawMaterials()
         {
-            return await context.RawMaterials.ToListAsync();
-        }
-        [HttpPost]
-        public async Task<ActionResult<RawMaterial>> CreateMaterial (RawMaterial material)
-        {
-            context.RawMaterials.Add(material);
-            await context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetRawMaterials),new { id = material.MaterialId },material);
+            return Ok(await _rawMaterialRepository.getRawMaterialsAsync());
+
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMaterial(int id,RawMaterial material)
+        [HttpPost]
+        public async Task<IActionResult> createRawMaterial(RawMaterialRequestDto rawMaterialRequestDto)
         {
-            if (id !=material.MaterialId) return BadRequest();
-            context.Entry(material).State= EntityState.Modified;
-            return NoContent();
+            RawMaterial rawMaterial = new RawMaterial()
+            {
+                Name = rawMaterialRequestDto.Name,
+                StockQuantity = rawMaterialRequestDto.StockQuantity,
+                Unit = rawMaterialRequestDto.Unit,
+                ExpiryDate = rawMaterialRequestDto.ExpiryDate,
+                SuppilerId = rawMaterialRequestDto.SuppilerId,
+                CostPerUnit = rawMaterialRequestDto.CostPerUnit,
+
+            };
+            await _rawMaterialRepository.createRawMaterialAsync(rawMaterial);
+            return StatusCode(StatusCodes.Status201Created, "Material is created");
         }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMaterial(int id)
-        {
-            var material=await context.RawMaterials.FindAsync(id);
-            if (material == null) return NotFound();
-            context .RawMaterials.Remove(material);
-            await context.SaveChangesAsync();
-            return NoContent();
-        }
+
+       
     }
 }

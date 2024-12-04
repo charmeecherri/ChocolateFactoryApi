@@ -1,4 +1,6 @@
 using ChocolateFactoryApi.Data;
+using ChocolateFactoryApi.repositories;
+using ChocolateFactoryApi.repositories.interfaces;
 using ChocolateFactoryApi.services;
 using ChocolateFactoryApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -28,6 +30,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
+
+//Register Repositories for Dependency Injectiond
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IRawMaterialRepository, RawMaterialRepository>();
+builder.Services.AddScoped<IProductionScheduleRepository, ProductionScheduleRepository>();
+builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 
 // Register Services for Dependency Injection
 builder.Services.AddScoped<IUserService, UserService>();

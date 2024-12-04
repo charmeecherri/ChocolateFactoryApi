@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Reflection.Emit;
 
 namespace ChocolateFactoryApi.Data
 {
@@ -16,6 +17,10 @@ namespace ChocolateFactoryApi.Data
 
         public DbSet<Recipe> Recipes { get; set; }
 
+        public DbSet<Product> Products { get; set; }
+
+        public DbSet<Ingredients> Ingredients { get; set; }
+
 
   
 
@@ -23,7 +28,22 @@ namespace ChocolateFactoryApi.Data
         {
 
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<ProductionSchedule>().HasKey(ps => ps.ScheduleId);
+
+            modelBuilder.Entity<ProductionSchedule>()
+                .HasOne(p => p.Product)
+                .WithMany(ps => ps.ProductionSchedules)
+                .HasForeignKey(ps => ps.ProductId);
+
+            modelBuilder.Entity<Ingredients>()
+               .HasOne(i => i.Recipe)
+               .WithMany(r => r.Ingredients)
+               .HasForeignKey(fi => fi.RecipeId);
+
+            modelBuilder.Entity<Ingredients>()
+                .HasOne(i => i.RawMaterial)
+                .WithMany(m => m.Ingredients)
+                .HasForeignKey(fi => fi.MaterialId);
+
             modelBuilder.Entity<RawMaterial>()
             .Property(rm => rm.CostPerUnit)
             .HasPrecision(18, 2);
