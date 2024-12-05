@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ChocolateFactoryApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCommit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,6 +22,23 @@ namespace ChocolateFactoryApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.ProductId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Quality",
+                columns: table => new
+                {
+                    CheckId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BatchId = table.Column<int>(type: "int", nullable: false),
+                    Inspectorid = table.Column<int>(type: "int", nullable: false),
+                    InspectionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TestResults = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Quality", x => x.CheckId);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,6 +75,54 @@ namespace ChocolateFactoryApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    OrderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.OrderId);
+                    table.ForeignKey(
+                        name: "FK_Orders_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Packagings",
+                columns: table => new
+                {
+                    PackagingId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    BatchId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PackagingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    WarehouseLocation = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Packagings", x => x.PackagingId);
+                    table.ForeignKey(
+                        name: "FK_Packagings_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -142,6 +207,16 @@ namespace ChocolateFactoryApi.Migrations
                 column: "RecipeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_ProductId",
+                table: "Orders",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Packagings_ProductId",
+                table: "Packagings",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductionSchedules_ProductId",
                 table: "ProductionSchedules",
                 column: "ProductId");
@@ -159,7 +234,16 @@ namespace ChocolateFactoryApi.Migrations
                 name: "Ingredients");
 
             migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "Packagings");
+
+            migrationBuilder.DropTable(
                 name: "ProductionSchedules");
+
+            migrationBuilder.DropTable(
+                name: "Quality");
 
             migrationBuilder.DropTable(
                 name: "Users");

@@ -21,6 +21,12 @@ namespace ChocolateFactoryApi.Data
 
         public DbSet<Ingredients> Ingredients { get; set; }
 
+        public DbSet<Quality> Quality { get; set; }
+
+        public DbSet<Packaging> Packagings { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+
 
   
 
@@ -52,6 +58,16 @@ namespace ChocolateFactoryApi.Data
                 .HasOne(r => r.product)
                 .WithMany(p => p.recipes)
                 .HasForeignKey(p => p.ProductId);
+
+            modelBuilder.Entity<Packaging>()
+                .HasOne(p => p.Product)
+                .WithMany(p => p.packagings)
+                .HasForeignKey(p => p.ProductId);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Product)
+                .WithMany(p => p.orderings)
+                .HasForeignKey(o => o.ProductId);
 
         }
 

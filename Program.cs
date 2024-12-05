@@ -36,6 +36,9 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IRawMaterialRepository, RawMaterialRepository>();
 builder.Services.AddScoped<IProductionScheduleRepository, ProductionScheduleRepository>();
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
+builder.Services.AddScoped<IQualityRepository, QualityRepository>();
+builder.Services.AddScoped<IPackagingRepository, PackagingRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 // Register Services for Dependency Injection
 builder.Services.AddScoped<IUserService, UserService>();

@@ -16,5 +16,11 @@ namespace ChocolateFactoryApi.Models
         [JsonIgnore]
         public List<Recipe> recipes { get; set; }
 
+        [JsonIgnore]
+        public List<Packaging> packagings { get; set; }
+
+        [JsonIgnore]
+        public List<Order> orderings { get; set; }
+
     }
 }

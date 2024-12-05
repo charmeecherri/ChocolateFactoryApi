@@ -45,6 +45,74 @@ namespace ChocolateFactoryApi.Migrations
                     b.ToTable("Ingredients");
                 });
 
+            modelBuilder.Entity("ChocolateFactoryApi.Models.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DeliveryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("ChocolateFactoryApi.Models.Packaging", b =>
+                {
+                    b.Property<int>("PackagingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PackagingId"));
+
+                    b.Property<int>("BatchId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("PackagingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WarehouseLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PackagingId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Packagings");
+                });
+
             modelBuilder.Entity("ChocolateFactoryApi.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
@@ -95,6 +163,36 @@ namespace ChocolateFactoryApi.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductionSchedules");
+                });
+
+            modelBuilder.Entity("ChocolateFactoryApi.Models.Quality", b =>
+                {
+                    b.Property<int>("CheckId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CheckId"));
+
+                    b.Property<int>("BatchId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("InspectionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Inspectorid")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TestResults")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CheckId");
+
+                    b.ToTable("Quality");
                 });
 
             modelBuilder.Entity("ChocolateFactoryApi.Models.RawMaterial", b =>
@@ -212,6 +310,28 @@ namespace ChocolateFactoryApi.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("ChocolateFactoryApi.Models.Order", b =>
+                {
+                    b.HasOne("ChocolateFactoryApi.Models.Product", "Product")
+                        .WithMany("orderings")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ChocolateFactoryApi.Models.Packaging", b =>
+                {
+                    b.HasOne("ChocolateFactoryApi.Models.Product", "Product")
+                        .WithMany("packagings")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ChocolateFactoryApi.Models.ProductionSchedule", b =>
                 {
                     b.HasOne("ChocolateFactoryApi.Models.Product", "Product")
@@ -237,6 +357,10 @@ namespace ChocolateFactoryApi.Migrations
             modelBuilder.Entity("ChocolateFactoryApi.Models.Product", b =>
                 {
                     b.Navigation("ProductionSchedules");
+
+                    b.Navigation("orderings");
+
+                    b.Navigation("packagings");
 
                     b.Navigation("recipes");
                 });
