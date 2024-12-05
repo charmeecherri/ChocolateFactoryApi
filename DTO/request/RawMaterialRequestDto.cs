@@ -17,7 +17,7 @@ namespace ChocolateFactoryApi.DTO.request
         public DateTime ExpiryDate { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Supplier Id can't be null or zero")]
-        public int SuppilerId { get; set; }
+        public int SupplierId { get; set; }
 
         [Required]
         public decimal CostPerUnit { get; set; }

@@ -152,6 +152,8 @@ namespace ChocolateFactoryApi.Migrations
 
                     b.HasKey("RecipeId");
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("Recipes");
                 });
 
@@ -221,9 +223,22 @@ namespace ChocolateFactoryApi.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ChocolateFactoryApi.Models.Recipe", b =>
+                {
+                    b.HasOne("ChocolateFactoryApi.Models.Product", "product")
+                        .WithMany("recipes")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("product");
+                });
+
             modelBuilder.Entity("ChocolateFactoryApi.Models.Product", b =>
                 {
                     b.Navigation("ProductionSchedules");
+
+                    b.Navigation("recipes");
                 });
 
             modelBuilder.Entity("ChocolateFactoryApi.Models.RawMaterial", b =>

@@ -48,6 +48,11 @@ namespace ChocolateFactoryApi.Data
             .Property(rm => rm.CostPerUnit)
             .HasPrecision(18, 2);
 
+            modelBuilder.Entity<Recipe>()
+                .HasOne(r => r.product)
+                .WithMany(p => p.recipes)
+                .HasForeignKey(p => p.ProductId);
+
         }
 
 

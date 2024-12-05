@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\response\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

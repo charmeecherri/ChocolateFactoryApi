@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ChocolateFactoryApi.Models
 {
@@ -19,6 +20,7 @@ namespace ChocolateFactoryApi.Models
 
         public decimal CostPerUnit {  get; set; }
 
+        [JsonIgnore]
         public List<Ingredients> Ingredients { get; set; }
 
     }

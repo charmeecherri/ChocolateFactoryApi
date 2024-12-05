@@ -36,7 +36,7 @@ namespace ChocolateFactoryApi.Controllers
                 StockQuantity = rawMaterialRequestDto.StockQuantity,
                 Unit = rawMaterialRequestDto.Unit,
                 ExpiryDate = rawMaterialRequestDto.ExpiryDate,
-                SuppilerId = rawMaterialRequestDto.SuppilerId,
+                SuppilerId = rawMaterialRequestDto.SupplierId,
                 CostPerUnit = rawMaterialRequestDto.CostPerUnit,
 
             };

@@ -1,4 +1,5 @@
 ﻿using ChocolateFactoryApi.Data;
+using ChocolateFactoryApi.DTO.response;
 using ChocolateFactoryApi.Models;
 using ChocolateFactoryApi.repositories.interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -32,9 +33,27 @@ namespace ChocolateFactoryApi.repositories
             return await context.Recipes.Where( r => r.RecipeId == id).FirstAsync();
         }
 
-        public async Task<List<Recipe>> getRecipesAsync()
+        public async Task<List<RecipeResponseDto>> getRecipesAsync()
         {
-            return await context.Recipes.ToListAsync();
+            return await context.Recipes.Select(r => new RecipeResponseDto()
+            {
+                RecipeId = r.RecipeId,
+                ProductId = r.ProductId,
+                ProductName = r.product.ProductName,
+                Ingredients = r.Ingredients.Select(i => new RawMaterial()
+                {
+                    MaterialId = i.RawMaterial.MaterialId,
+                    Name = i.RawMaterial.Name,
+                    StockQuantity = i.RawMaterial.StockQuantity,
+                    ExpiryDate = i.RawMaterial.ExpiryDate,
+                    SuppilerId = i.RawMaterial.SuppilerId,
+                    CostPerUnit = i.RawMaterial.CostPerUnit
+
+                }).ToList(),
+                QuantityPerBatch = r.QuantityPerBatch,
+                Instructions = r.Instructions,
+            }
+           ).ToListAsync();
         }
     }
 }

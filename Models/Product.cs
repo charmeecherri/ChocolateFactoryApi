@@ -13,5 +13,8 @@ namespace ChocolateFactoryApi.Models
         [JsonIgnore]
         public ICollection<ProductionSchedule> ProductionSchedules { get; set; }
 
+        [JsonIgnore]
+        public List<Recipe> recipes { get; set; }
+
     }
 }

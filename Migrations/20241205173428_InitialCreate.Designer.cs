@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChocolateFactoryApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241204223451_InitialCommit")]
-    partial class InitialCommit
+    [Migration("20241205173428_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,6 +155,8 @@ namespace ChocolateFactoryApi.Migrations
 
                     b.HasKey("RecipeId");
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("Recipes");
                 });
 
@@ -224,9 +226,22 @@ namespace ChocolateFactoryApi.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ChocolateFactoryApi.Models.Recipe", b =>
+                {
+                    b.HasOne("ChocolateFactoryApi.Models.Product", "product")
+                        .WithMany("recipes")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("product");
+                });
+
             modelBuilder.Entity("ChocolateFactoryApi.Models.Product", b =>
                 {
                     b.Navigation("ProductionSchedules");
+
+                    b.Navigation("recipes");
                 });
 
             modelBuilder.Entity("ChocolateFactoryApi.Models.RawMaterial", b =>
