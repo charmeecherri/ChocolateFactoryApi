@@ -23,10 +23,14 @@ namespace ChocolateFactoryApi.repositories
         {
             throw new NotImplementedException();
         }
+        
 
         public async Task<List<Quality>> GetQualitiesAsync()
         {
-            return await context.Quality.ToListAsync();
+            return await context.Quality
+                .Include(q => q.Batch)
+                .Include(q => q.Batch.Product)
+                .ToListAsync();
         }
 
         public async Task<Quality> getQualityByIdAsync(int qualityId)
@@ -34,9 +38,20 @@ namespace ChocolateFactoryApi.repositories
             return await context.Quality.Where(q => q.CheckId == qualityId).FirstAsync();
         }
 
-        public Task updateQualityAsync(Quality quality)
+        public async Task updateQualityAsync(Quality quality)
         {
-            throw new NotImplementedException();
+            context.Quality.Update(quality);
+            await context.SaveChangesAsync();
+        }
+
+        public AppDbContext getAppDbContext()
+        {
+            return context;
+        }
+
+        public async Task<Quality> getQualityByBatchId(int batchId)
+        {
+            return await context.Quality.Where(q => q.BatchId == batchId).FirstAsync();
         }
     }
 }

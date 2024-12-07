@@ -41,5 +41,14 @@ namespace ChocolateFactoryApi.repositories
             context.ProductionSchedules.Update(productionSchedule);
             await context.SaveChangesAsync();
         }
+
+        public async Task<List<ProductionSchedule>> getCompletedProductionSchedulesAsync()
+        {
+            return await context.ProductionSchedules.Where(ps => ps.Status == "completed").ToListAsync();
+        }
+
+        public AppDbContext getAppDbContext() {
+            return context;
+        }
     }
 }

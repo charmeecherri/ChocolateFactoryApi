@@ -43,6 +43,8 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 // Register Services for Dependency Injection
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<CommonService, CommonService>();
+
 
 
 builder.Services.AddEndpointsApiExplorer();

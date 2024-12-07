@@ -11,9 +11,11 @@ namespace ChocolateFactoryApi.Controllers
     public class QualityController : ControllerBase
     {
         private readonly IQualityRepository _qualityRepository;
+        private readonly IProductionScheduleRepository _productSchedulingRepository;
 
-        public QualityController(IQualityRepository qualityRepository) {
+        public QualityController(IQualityRepository qualityRepository,IProductionScheduleRepository productionScheduleRepository) {
             _qualityRepository = qualityRepository;
+            _productSchedulingRepository = productionScheduleRepository;
         }
 
         [HttpGet]
@@ -25,30 +27,58 @@ namespace ChocolateFactoryApi.Controllers
         [HttpPost]
         public async Task<IActionResult> createQuality(QualityRequestDto qualityRequestDto)
         {
-            Quality quality = new Quality()
+            using (var transaction = await _qualityRepository.getAppDbContext().Database.BeginTransactionAsync())
             {
-                BatchId = qualityRequestDto.BatchId,
-                Inspectorid = qualityRequestDto.InspectorId,
-                InspectionDate = qualityRequestDto.InspectionDate,
-                TestResults = qualityRequestDto.TestResults,
-                status = qualityRequestDto.status,
-            };
+                try
+                {
+                    Quality quality = new Quality()
+                    {
+                        BatchId = qualityRequestDto.BatchId,
+                        Inspectorid = qualityRequestDto.InspectorId,
+                        InspectionDate = qualityRequestDto.InspectionDate,
+                        TestResults = qualityRequestDto.TestResults,
+                    };
 
-            await _qualityRepository.createQualityAsync(quality);
-            return StatusCode(StatusCodes.Status201Created, "Quality checking is created");
+                    if (qualityRequestDto.TestResults == "passed")
+                        quality.status = "approved";
+                    else
+                        quality.status = "rejected";
+                    ProductionSchedule productionSchedule = await _productSchedulingRepository.getProductScheduleByIdAsync(qualityRequestDto.BatchId);
+
+                    if (productionSchedule.Status != "completed")
+                        return BadRequest("Product cannot be moved to Quality Control until production is completed.");
+
+                    await _qualityRepository.createQualityAsync(quality);
+                    await transaction.CommitAsync();
+                    return StatusCode(StatusCodes.Status201Created, "Quality checking is created");
+                }
+                catch(Exception e)
+                {
+                    if (e.InnerException != null)
+                        return BadRequest(e.InnerException.Message);
+                    else
+                        return BadRequest(e.Message);
+                }
+            }
 
         }
 
         [HttpPut]
-        public async Task<IActionResult> updateQualityStatus(int id, string status)
+        public async Task<IActionResult> updateQualityStatus(int id, string testResult)
         {
             Quality quality = await _qualityRepository.getQualityByIdAsync(id);
             if (quality == null)
-                return BadRequest("Cannot the quality with the id specified");
+                return BadRequest("Cannot find the quality with the id specified");
 
-            quality.status = status;
+            quality.TestResults = testResult;
+            if (testResult == "passed")
+                quality.status = "approved";
+            else
+                quality.status = "rejected";
             await _qualityRepository.updateQualityAsync(quality);
             return Ok("Updated the quality status");
         }
+
+
     }
 }

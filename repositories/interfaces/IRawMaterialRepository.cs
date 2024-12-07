@@ -6,7 +6,7 @@ namespace ChocolateFactoryApi.repositories.interfaces
     {
         Task<List<RawMaterial>> getRawMaterialsAsync();
 
-        Task<RawMaterial?> getRawMaterialByNameAsync(string name);
+        Task<RawMaterial> getRawMaterialByNameAsync(string name);
 
         Task createRawMaterialAsync(RawMaterial rawMaterial);
         Task updateRawMaterialAsync(RawMaterial rawMaterial);

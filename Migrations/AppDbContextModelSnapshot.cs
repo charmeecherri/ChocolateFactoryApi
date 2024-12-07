@@ -33,6 +33,9 @@ namespace ChocolateFactoryApi.Migrations
                     b.Property<int>("MaterialId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
@@ -40,7 +43,8 @@ namespace ChocolateFactoryApi.Migrations
 
                     b.HasIndex("MaterialId");
 
-                    b.HasIndex("RecipeId");
+                    b.HasIndex("RecipeId", "MaterialId")
+                        .IsUnique();
 
                     b.ToTable("Ingredients");
                 });
@@ -123,9 +127,12 @@ namespace ChocolateFactoryApi.Migrations
 
                     b.Property<string>("ProductName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ProductId");
+
+                    b.HasIndex("ProductName")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -192,6 +199,9 @@ namespace ChocolateFactoryApi.Migrations
 
                     b.HasKey("CheckId");
 
+                    b.HasIndex("BatchId")
+                        .IsUnique();
+
                     b.ToTable("Quality");
                 });
 
@@ -212,12 +222,12 @@ namespace ChocolateFactoryApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("StockQuantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("SuppilerId")
+                    b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
                     b.Property<string>("Unit")
@@ -225,6 +235,9 @@ namespace ChocolateFactoryApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MaterialId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("RawMaterials");
                 });
@@ -250,7 +263,8 @@ namespace ChocolateFactoryApi.Migrations
 
                     b.HasKey("RecipeId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId")
+                        .IsUnique();
 
                     b.ToTable("Recipes");
                 });
@@ -343,6 +357,17 @@ namespace ChocolateFactoryApi.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ChocolateFactoryApi.Models.Quality", b =>
+                {
+                    b.HasOne("ChocolateFactoryApi.Models.ProductionSchedule", "Batch")
+                        .WithOne("Quality")
+                        .HasForeignKey("ChocolateFactoryApi.Models.Quality", "BatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Batch");
+                });
+
             modelBuilder.Entity("ChocolateFactoryApi.Models.Recipe", b =>
                 {
                     b.HasOne("ChocolateFactoryApi.Models.Product", "product")
@@ -363,6 +388,12 @@ namespace ChocolateFactoryApi.Migrations
                     b.Navigation("packagings");
 
                     b.Navigation("recipes");
+                });
+
+            modelBuilder.Entity("ChocolateFactoryApi.Models.ProductionSchedule", b =>
+                {
+                    b.Navigation("Quality")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ChocolateFactoryApi.Models.RawMaterial", b =>

@@ -1,4 +1,5 @@
-﻿using ChocolateFactoryApi.Models;
+﻿using ChocolateFactoryApi.Data;
+using ChocolateFactoryApi.Models;
 
 namespace ChocolateFactoryApi.repositories.interfaces
 {
@@ -12,6 +13,10 @@ namespace ChocolateFactoryApi.repositories.interfaces
         Task updateQualityAsync(Quality quality);
 
         Task<Quality> getQualityByIdAsync(int qualityId);
+
+        Task<Quality> getQualityByBatchId(int batchId);
+
+        AppDbContext getAppDbContext();
 
     }
 }

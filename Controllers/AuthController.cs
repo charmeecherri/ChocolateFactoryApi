@@ -41,8 +41,9 @@ namespace ChocolateFactoryApi.Controllers
             }
             // Generate JWT token
             var token = await _authService.GenerateJwtToken(user);
+            var userId = user.UserId;
 
-            return Ok(new { token });
+            return Ok(new { token,userId });
         }
     
     }

@@ -17,28 +17,11 @@ namespace ChocolateFactoryApi.Migrations
                 {
                     ProductId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ProductName = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.ProductId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Quality",
-                columns: table => new
-                {
-                    CheckId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BatchId = table.Column<int>(type: "int", nullable: false),
-                    Inspectorid = table.Column<int>(type: "int", nullable: false),
-                    InspectionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TestResults = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    status = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Quality", x => x.CheckId);
                 });
 
             migrationBuilder.CreateTable(
@@ -47,11 +30,11 @@ namespace ChocolateFactoryApi.Migrations
                 {
                     MaterialId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     StockQuantity = table.Column<int>(type: "int", nullable: false),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SuppilerId = table.Column<int>(type: "int", nullable: false),
+                    SupplierId = table.Column<int>(type: "int", nullable: false),
                     CostPerUnit = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
                 },
                 constraints: table =>
@@ -171,13 +154,37 @@ namespace ChocolateFactoryApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Quality",
+                columns: table => new
+                {
+                    CheckId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BatchId = table.Column<int>(type: "int", nullable: false),
+                    Inspectorid = table.Column<int>(type: "int", nullable: false),
+                    InspectionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TestResults = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Quality", x => x.CheckId);
+                    table.ForeignKey(
+                        name: "FK_Quality_ProductionSchedules_BatchId",
+                        column: x => x.BatchId,
+                        principalTable: "ProductionSchedules",
+                        principalColumn: "ScheduleId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Ingredients",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
-                    MaterialId = table.Column<int>(type: "int", nullable: false)
+                    MaterialId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -202,9 +209,10 @@ namespace ChocolateFactoryApi.Migrations
                 column: "MaterialId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ingredients_RecipeId",
+                name: "IX_Ingredients_RecipeId_MaterialId",
                 table: "Ingredients",
-                column: "RecipeId");
+                columns: new[] { "RecipeId", "MaterialId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_ProductId",
@@ -222,9 +230,28 @@ namespace ChocolateFactoryApi.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_ProductName",
+                table: "Products",
+                column: "ProductName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Quality_BatchId",
+                table: "Quality",
+                column: "BatchId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RawMaterials_Name",
+                table: "RawMaterials",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Recipes_ProductId",
                 table: "Recipes",
-                column: "ProductId");
+                column: "ProductId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -240,9 +267,6 @@ namespace ChocolateFactoryApi.Migrations
                 name: "Packagings");
 
             migrationBuilder.DropTable(
-                name: "ProductionSchedules");
-
-            migrationBuilder.DropTable(
                 name: "Quality");
 
             migrationBuilder.DropTable(
@@ -253,6 +277,9 @@ namespace ChocolateFactoryApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Recipes");
+
+            migrationBuilder.DropTable(
+                name: "ProductionSchedules");
 
             migrationBuilder.DropTable(
                 name: "Products");

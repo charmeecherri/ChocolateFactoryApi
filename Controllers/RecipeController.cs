@@ -3,6 +3,7 @@ using ChocolateFactoryApi.DTO.request;
 using ChocolateFactoryApi.Models;
 using ChocolateFactoryApi.repositories.interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChocolateFactoryApi.Controllers
@@ -29,30 +30,60 @@ namespace ChocolateFactoryApi.Controllers
 
         // POST: api/Recipes
         [HttpPost]
-        public async Task<ActionResult<Recipe>> AddRecipe(RecipeDto recipeDto)
+        public async Task<IActionResult> AddRecipe(RecipeDto recipeDto)
         {
-            Recipe recipe = new Recipe()
+            using(var transaction = await _recipeRepository.getContext().Database.BeginTransactionAsync())
             {
-                ProductId = recipeDto.ProductId,
-                QuantityPerBatch = recipeDto.QuantityPerBatch,
-                Instructions = recipeDto.Instructions,
-            };
-            await _recipeRepository.createRecipeAsync(recipe);
-
-            List<Ingredients> ingredients = new List<Ingredients>();
-            for (int i = 0; i < recipeDto.Ingredients.Count; i++)
-            {
-                RawMaterial material = await _rawMaterialRepository.getRawMaterialByNameAsync(recipeDto.Ingredients[i]);
-                Ingredients ingredientsObj = new Ingredients()
+                try
                 {
-                    RecipeId = recipe.RecipeId,
-                    MaterialId = material.MaterialId
-                };
-                ingredients.Add(ingredientsObj);
+                    Recipe recipe = new Recipe()
+                    {
+                        ProductId = recipeDto.ProductId,
+                        QuantityPerBatch = recipeDto.QuantityPerBatch,
+                        Instructions = recipeDto.Instructions,
+                    };
+                    await _recipeRepository.createRecipeAsync(recipe);
+
+                    List<Ingredients> ingredients = new List<Ingredients>();
+                    for (int i = 0; i < recipeDto.Ingredients.Count; i++)
+                    {
+                        IngredientsDto ingredientsDto = recipeDto.Ingredients[i];
+                        RawMaterial material = await _rawMaterialRepository.getRawMaterialByNameAsync(ingredientsDto.name);
+                        Ingredients ingredientsObj = new Ingredients()
+                        {
+                            RecipeId = recipe.RecipeId,
+                            MaterialId = material.MaterialId,
+                            Quantity = ingredientsDto.quantity
+                        };
+                        ingredients.Add(ingredientsObj);
+                    }
+
+                    await _recipeRepository.createIngredientsAsync(ingredients);
+                    await transaction.CommitAsync();
+                }
+                catch(DbUpdateException e)
+                {
+                    if (e.InnerException is not null)
+                    {
+                        return BadRequest(e.InnerException.Message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return BadRequest(ex.Message);
+                }
+                return StatusCode(StatusCodes.Status201Created, "Recipe created successfully");
+
             }
 
-            await _recipeRepository.createIngredientsAsync(ingredients);
-            return StatusCode(StatusCodes.Status201Created, "Recipe created successfully");
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> deleteRecipe(int id)
+        {
+            await _recipeRepository.deleteRecipe(id);
+            return Ok("recipe is deleted");
         }
     }
 }

@@ -69,6 +69,15 @@ namespace ChocolateFactoryApi.Data
                 .WithMany(p => p.orderings)
                 .HasForeignKey(o => o.ProductId);
 
+            modelBuilder.Entity<Ingredients>()
+               .HasIndex(i => new { i.RecipeId, i.MaterialId }).IsUnique();
+
+            modelBuilder.Entity<Quality>()
+                .HasOne(q => q.Batch)
+                .WithOne(p => p.Quality)
+                .HasForeignKey<Quality>(q => q.BatchId);
+
+
         }
 
 

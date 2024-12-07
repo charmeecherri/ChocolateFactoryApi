@@ -14,5 +14,7 @@ namespace ChocolateFactoryApi.Models
         public int MaterialId { get; set; }
 
         public RawMaterial RawMaterial { get; set; }
+
+        public int Quantity { get; set;  }
     }
 }

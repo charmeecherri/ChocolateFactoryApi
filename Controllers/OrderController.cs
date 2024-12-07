@@ -28,6 +28,10 @@ namespace ChocolateFactoryApi.Controllers
         [HttpPost]
         public async Task<IActionResult> createOrder(OrderRequestDto orderRequestDto)
         {
+            if (orderRequestDto.OrderDate <= DateTime.Now.ToUniversalTime())
+            {
+                return BadRequest("order date cannot be in the past");
+            }
             Order order = new Order()
             {
                 CustomerId = orderRequestDto.CustomerId,

@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ChocolateFactoryApi.Models
 {
+    [Index(nameof(Name), IsUnique = true)]
     public class RawMaterial
     {
         [Key]
@@ -16,7 +18,7 @@ namespace ChocolateFactoryApi.Models
 
         public DateTime ExpiryDate { get; set; }
 
-        public int SuppilerId {  get; set; }
+        public int SupplierId {  get; set; }
 
         public decimal CostPerUnit {  get; set; }
 

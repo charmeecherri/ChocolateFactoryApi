@@ -23,6 +23,7 @@ namespace ChocolateFactoryApi.Controllers
 
         }
 
+
         [HttpPost]
         public async Task<IActionResult> createProduct(string name)
         {
@@ -32,6 +33,14 @@ namespace ChocolateFactoryApi.Controllers
             };
             await _productRepository.createProductAsync(product);
             return StatusCode(StatusCodes.Status201Created,"Product is created");
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> deleteProduct(int id)
+        {
+            Product product = await _productRepository.getProductByIdAsync(id);
+            await _productRepository.deleteProductAsync(product);
+            return Ok("Product is deleted");
         }
     }
 }

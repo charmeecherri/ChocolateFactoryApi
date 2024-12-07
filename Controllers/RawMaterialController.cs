@@ -30,13 +30,18 @@ namespace ChocolateFactoryApi.Controllers
         [HttpPost]
         public async Task<IActionResult> createRawMaterial(RawMaterialRequestDto rawMaterialRequestDto)
         {
+            //Validation : Stoping the user to select the expiry products.
+            if (rawMaterialRequestDto.ExpiryDate <= DateTime.Now.ToUniversalTime())
+            {
+                return BadRequest("The Expiry date cannot be in the past");
+            }
             RawMaterial rawMaterial = new RawMaterial()
             {
                 Name = rawMaterialRequestDto.Name,
                 StockQuantity = rawMaterialRequestDto.StockQuantity,
                 Unit = rawMaterialRequestDto.Unit,
                 ExpiryDate = rawMaterialRequestDto.ExpiryDate,
-                SuppilerId = rawMaterialRequestDto.SupplierId,
+                SupplierId = rawMaterialRequestDto.SupplierId,
                 CostPerUnit = rawMaterialRequestDto.CostPerUnit,
 
             };

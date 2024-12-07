@@ -26,7 +26,7 @@ namespace ChocolateFactoryApi.repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<RawMaterial?> getRawMaterialByNameAsync(string name)
+        public async Task<RawMaterial> getRawMaterialByNameAsync(string name)
         {
             return await context.RawMaterials.Where(r => name == r.Name).FirstAsync();
         }

@@ -28,6 +28,7 @@ namespace ChocolateFactoryApi.repositories
             await context.SaveChangesAsync();
         }
 
+
         public async Task<Recipe> getRecipeById(int id)
         {
             return await context.Recipes.Where( r => r.RecipeId == id).FirstAsync();
@@ -44,9 +45,10 @@ namespace ChocolateFactoryApi.repositories
                 {
                     MaterialId = i.RawMaterial.MaterialId,
                     Name = i.RawMaterial.Name,
-                    StockQuantity = i.RawMaterial.StockQuantity,
+                    Unit = i.RawMaterial.Unit,
+                    StockQuantity = i.Quantity,
                     ExpiryDate = i.RawMaterial.ExpiryDate,
-                    SuppilerId = i.RawMaterial.SuppilerId,
+                    SupplierId = i.RawMaterial.SupplierId,
                     CostPerUnit = i.RawMaterial.CostPerUnit
 
                 }).ToList(),
@@ -55,5 +57,41 @@ namespace ChocolateFactoryApi.repositories
             }
            ).ToListAsync();
         }
+
+        public AppDbContext getContext()
+        {
+            return context;
+        }
+
+        public async Task deleteRecipe(int id)
+        {
+            context.Recipes.Remove(await getRecipeById(id));
+            context.SaveChanges();
+        }
+
+        public async Task<RecipeResponseDto> getRecipeByProjectIdAsycn(int projectId)
+        {
+            return await context.Recipes.Where(r => projectId == r.ProductId).Select(r => new RecipeResponseDto()
+            {
+                RecipeId = r.RecipeId,
+                ProductId = r.ProductId,
+                ProductName = r.product.ProductName,
+                Ingredients = r.Ingredients.Select(i => new RawMaterial()
+                {
+                    MaterialId = i.RawMaterial.MaterialId,
+                    Name = i.RawMaterial.Name,
+                    Unit = i.RawMaterial.Unit,
+                    StockQuantity = i.Quantity,
+                    ExpiryDate = i.RawMaterial.ExpiryDate,
+                    SupplierId = i.RawMaterial.SupplierId,
+                    CostPerUnit = i.RawMaterial.CostPerUnit
+
+                }).ToList(),
+                QuantityPerBatch = r.QuantityPerBatch,
+                Instructions = r.Instructions,
+            }).FirstAsync();
+        }
+
+       
     }
 }

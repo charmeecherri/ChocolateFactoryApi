@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ChocolateFactoryApi.Models
 {
+    [Index(nameof(ProductName), IsUnique = true)]
     public class Product
     {
         [Key]

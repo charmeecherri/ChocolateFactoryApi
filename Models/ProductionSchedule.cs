@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ChocolateFactoryApi.Models
 {
@@ -20,6 +21,9 @@ namespace ChocolateFactoryApi.Models
         public int SupervisorId {  get; set; }
 
         public string Status { get; set; }
+
+        [JsonIgnore]
+        public Quality Quality { get; set; }
 
 
     }

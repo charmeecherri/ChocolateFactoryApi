@@ -16,7 +16,7 @@ namespace ChocolateFactoryApi.DTO.request
         [Required]
         public string TestResults { get; set; }
 
-        [Required]
-        public string status { get; set; }
+        //[Required]
+        //public string status { get; set; }
     }
 }

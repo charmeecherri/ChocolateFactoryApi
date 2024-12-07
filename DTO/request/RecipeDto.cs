@@ -8,7 +8,7 @@ namespace ChocolateFactoryApi.DTO.request
         [Range(1, int.MaxValue, ErrorMessage = "Product Id can't be null or zero")]
         public int ProductId { get; set; }
 
-        public List<string> Ingredients { get; set; }
+        public List<IngredientsDto> Ingredients { get; set; }
 
         [Required]
         public string QuantityPerBatch { get; set; }

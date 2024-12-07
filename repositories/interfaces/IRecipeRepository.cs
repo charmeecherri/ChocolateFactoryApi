@@ -1,4 +1,5 @@
-﻿using ChocolateFactoryApi.DTO.response;
+﻿using ChocolateFactoryApi.Data;
+using ChocolateFactoryApi.DTO.response;
 using ChocolateFactoryApi.Models;
 
 namespace ChocolateFactoryApi.repositories.interfaces
@@ -11,5 +12,11 @@ namespace ChocolateFactoryApi.repositories.interfaces
         Task createRecipeAsync(Recipe recipe);
 
         Task createIngredientsAsync(List<Ingredients> ingredients);
+
+        Task deleteRecipe(int id);
+
+        AppDbContext getContext();
+
+        Task<RecipeResponseDto> getRecipeByProjectIdAsycn(int projectId);
     }
 }

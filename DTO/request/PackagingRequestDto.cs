@@ -11,7 +11,6 @@ namespace ChocolateFactoryApi.DTO.request
         [Range(1, int.MaxValue, ErrorMessage = "Batch Id can't be null or zero")]
         public int BatchId { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "Quantity can't be null or zero")]
         public int Quantity { get; set; }
 
         [Required]
