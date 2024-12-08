@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Writers;
 using ChocolateFactoryApi.Models;
 using ChocolateFactoryApi.Services;
+using ChocolateFactoryApi.repositories.interfaces;
 
 namespace ChocolateFactoryApi.Controllers
 {
@@ -14,14 +15,16 @@ namespace ChocolateFactoryApi.Controllers
     {
         private readonly AppDbContext context;
         private readonly IUserService _userService;
+        private readonly INotificationRepository _notificaionRepository;
 
-        public UserController(AppDbContext context,IUserService userService)
+        public UserController(AppDbContext context,IUserService userService,INotificationRepository notificationRepository)
         {
             this.context = context;
             _userService = userService;
+            _notificaionRepository = notificationRepository;
         }
-        [HttpGet]
 
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await context.Users.ToListAsync();
@@ -36,6 +39,7 @@ namespace ChocolateFactoryApi.Controllers
             return CreatedAtAction(nameof(GetUsers),new {id= user.UserId},user);
 
         }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, User user)
         {
@@ -43,6 +47,13 @@ namespace ChocolateFactoryApi.Controllers
             context.Entry(user).State = EntityState.Modified;
             await context.SaveChangesAsync();
             return NoContent();
+        }
+
+        [HttpGet]
+        [Route("notification")]
+        public async Task<IActionResult> getNotification(int userId)
+        {
+            return Ok(await _notificaionRepository.getUserNotifications(userId));
         }
 
     }

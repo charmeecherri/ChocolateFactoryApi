@@ -45,5 +45,35 @@ namespace ChocolateFactoryApi.Controllers
             await _orderRepository.createOrderAsync(order);
             return StatusCode(StatusCodes.Status201Created, "Order created");
         }
+
+        [HttpPut]
+        public async Task<IActionResult> updateOrder(int id,OrderRequestDto orderRequestDto)
+        {
+            if (orderRequestDto.OrderDate <= DateTime.Now.ToUniversalTime())
+            {
+                return BadRequest("order date cannot be in the past");
+            }
+
+            Order order = await _orderRepository.getOrderById(id);
+
+            order.CustomerId = orderRequestDto.CustomerId;
+            order.ProductId = orderRequestDto.ProductId;
+            order.Quantity = orderRequestDto.Quantity;
+            order.OrderDate = orderRequestDto.OrderDate;
+            order.DeliveryDate = orderRequestDto.DeliveryDate;
+            order.status = orderRequestDto.status;
+            
+
+            await _orderRepository.updateOrderAsync(order);
+            return Ok("Order updated successfully");
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> deleteOrder(int id)
+        {
+            Order order = await _orderRepository.getOrderById(id);
+            await _orderRepository.deleteOrderAsync(order);
+            return Ok("order deleted successfully");
+        }
     }
 }

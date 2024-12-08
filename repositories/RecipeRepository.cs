@@ -92,6 +92,10 @@ namespace ChocolateFactoryApi.repositories
             }).FirstAsync();
         }
 
-       
+        public async Task updateRecipeAsync(Recipe recipe)
+        {
+            context.Recipes.Update(recipe);
+            await context.SaveChangesAsync();
+        }
     }
 }

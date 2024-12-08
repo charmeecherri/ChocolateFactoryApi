@@ -8,6 +8,7 @@ namespace ChocolateFactoryApi.repositories.interfaces
         Task createOrderAsync(Order order);
 
         Task<List<OrderResponseDto>> GetOrdersAsync();
+        Task<Order> getOrderById(int id);
         Task deleteOrderAsync(Order order);
         Task updateOrderAsync(Order order);
     }

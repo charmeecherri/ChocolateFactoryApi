@@ -61,5 +61,40 @@ namespace ChocolateFactoryApi.Controllers
             await _packagingRepository.createPackageAsync(packaging);
             return StatusCode(StatusCodes.Status201Created, "Created the packing");
         }
+
+        [HttpPut]
+        public async Task<IActionResult> updatePackingAsync(int id,PackagingRequestDto packagingRequestDto)
+        {
+            if (packagingRequestDto.ExpiryDate <= DateTime.Now.ToUniversalTime())
+            {
+                return BadRequest("The Expiry date cannot be in the past");
+            }
+
+            if (packagingRequestDto.PackagingDate <= DateTime.Now.ToUniversalTime())
+            {
+                return BadRequest("The packaging date cannot be in the past");
+            }
+
+            Packaging packaging = await _packagingRepository.getpackagingByIdAsync(id);
+            packaging.ProductId = packagingRequestDto.ProductId;
+            packaging.BatchId = packagingRequestDto.BatchId;
+            packaging.Quantity = packagingRequestDto.Quantity;
+            packaging.ExpiryDate = packagingRequestDto.ExpiryDate;
+            packaging.PackagingDate = packagingRequestDto.PackagingDate;
+            packaging.WarehouseLocation = packagingRequestDto.WarehouseLocation;
+
+            await _packagingRepository.updatePackagingAsync(packaging);
+            return Ok("updated the packaging");
+
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> deletePackaging(int id)
+        {
+            Packaging packaging = await _packagingRepository.getpackagingByIdAsync(id);
+            await _packagingRepository.deletePackageAsync(packaging);
+            return Ok("Packing is deleted successfully");
+
+        }
     }
 }

@@ -63,6 +63,7 @@ namespace ChocolateFactoryApi.Controllers
                 }
                 catch(DbUpdateException e)
                 {
+                    await transaction.RollbackAsync();
                     if (e.InnerException is not null)
                     {
                         return BadRequest(e.InnerException.Message);

@@ -20,9 +20,11 @@ namespace ChocolateFactoryApi.repositories
             await context.SaveChangesAsync();
         }
 
-        public Task deletePackageAsync(Packaging packaging)
+        public async Task deletePackageAsync(Packaging packaging)
         {
-            throw new NotImplementedException();
+            context.Packagings.Remove(packaging);
+            await context.SaveChangesAsync();
+
         }
 
         public async Task<List<PackagingResponseDto>> getPackagesAsync()
@@ -40,9 +42,15 @@ namespace ChocolateFactoryApi.repositories
             }).ToListAsync();
         }
 
-        public Task updatePackagingAsync(Packaging packaging)
+        public async Task<Packaging> getpackagingByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await context.Packagings.Where(p => p.PackagingId == id).FirstAsync();
+        }
+
+        public async Task updatePackagingAsync(Packaging packaging)
+        {
+            context.Packagings.Update(packaging);
+            await context.SaveChangesAsync();
         }
     }
 }

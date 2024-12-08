@@ -31,7 +31,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-//Register Repositories for Dependency Injectiond
+//Register Repositories for Dependency Injection
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IRawMaterialRepository, RawMaterialRepository>();
 builder.Services.AddScoped<IProductionScheduleRepository, ProductionScheduleRepository>();
@@ -39,6 +39,11 @@ builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 builder.Services.AddScoped<IQualityRepository, QualityRepository>();
 builder.Services.AddScoped<IPackagingRepository, PackagingRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+builder.Services.AddScoped<IMaintanenceRepostiory, MaintanenceRepository>();
+builder.Services.AddScoped<IAnalyticsRepository, AnalyticsRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
 
 // Register Services for Dependency Injection
 builder.Services.AddScoped<IUserService, UserService>();

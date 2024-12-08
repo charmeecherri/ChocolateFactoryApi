@@ -7,6 +7,7 @@ using ChocolateFactoryApi.repositories.interfaces;
 using ChocolateFactoryApi.services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChocolateFactoryApi.Controllers
@@ -117,9 +118,39 @@ namespace ChocolateFactoryApi.Controllers
         [HttpDelete]
         public async Task<IActionResult> deleteProductionStatus(int id)
         {
-            ProductionSchedule productionSchedule = await _productionScheduleRepository.getProductScheduleByIdAsync(id);
-            await _productionScheduleRepository.deleteProductionScheduleAsync(productionSchedule);
-            return Ok("deleted the production schedule");
+
+            using (var transaction = await _productionScheduleRepository.getAppDbContext().Database.BeginTransactionAsync())
+            {
+
+                try
+                {
+                    ProductionSchedule productionSchedule = await _productionScheduleRepository.getProductScheduleByIdAsync(id);
+                    if (productionSchedule.Status != "completed")
+                    {
+                        RecipeResponseDto recipe = await _recipeRepository.getRecipeByProjectIdAsycn(productionSchedule.ProductId);
+                        for (int i = 0; i < recipe.Ingredients.Count; i++)
+                        {
+                            //Updation of raw material stock
+                            RawMaterial rawMaterial = await _rawMaterialRepository.getRawMaterialByNameAsync(recipe.Ingredients[i].Name);
+                            rawMaterial.StockQuantity = rawMaterial.StockQuantity + recipe.Ingredients[i].StockQuantity;
+                            await _rawMaterialRepository.updateRawMaterialAsync(rawMaterial);
+                        }
+
+                    }
+                    await _productionScheduleRepository.deleteProductionScheduleAsync(productionSchedule);
+                    await transaction.CommitAsync();
+                    return Ok("deleted the production schedule");
+                }
+                catch(Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    if (e.InnerException != null)
+                        return BadRequest(e.InnerException.Message);
+                    else
+                        return BadRequest(e.Message);
+                }
+
+            }
         }
 
 

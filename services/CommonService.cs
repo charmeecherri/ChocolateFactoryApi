@@ -23,5 +23,16 @@ namespace ChocolateFactoryApi.services
             }
             return true;
         }
+
+        public async Task<int> getMaterialStockQuantity()
+        {
+            List<RawMaterial> rawMaterials = await _rawMaterialRepository.getRawMaterialsAsync();
+            int stockCount = 0;
+            for (int i = 0; i < rawMaterials.Count; i++)
+                stockCount = stockCount + rawMaterials[i].StockQuantity;
+
+            return stockCount;
+       
+        }
     }
 }

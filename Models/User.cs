@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ChocolateFactoryApi.Models
 {
@@ -15,5 +16,11 @@ namespace ChocolateFactoryApi.Models
         public string Email { get; set; }
         public bool IsActive { get; set; }
         public string Name { get; set; }
+
+        [JsonIgnore]
+        public List<Warehouse> Warehouse { get; set; }
+
+        [JsonIgnore]
+        public List<Notification> Notification { get; set; }
     }
 }

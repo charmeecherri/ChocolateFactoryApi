@@ -20,9 +20,15 @@ namespace ChocolateFactoryApi.repositories
             await context.SaveChangesAsync();
         }
 
-        public Task deleteOrderAsync(Order order)
+        public async Task deleteOrderAsync(Order order)
         {
-            throw new NotImplementedException();
+            context.Orders.Remove(order);
+            await context.SaveChangesAsync();
+        }
+
+        public Task<Order> getOrderById(int id)
+        {
+            return context.Orders.Where(o => o.OrderId == id).FirstAsync();
         }
 
         public async Task<List<OrderResponseDto>> GetOrdersAsync()
@@ -40,9 +46,10 @@ namespace ChocolateFactoryApi.repositories
             }).ToListAsync();
         }
 
-        public Task updateOrderAsync(Order order)
+        public async Task updateOrderAsync(Order order)
         {
-            throw new NotImplementedException();
+            context.Orders.Update(order);
+            await context.SaveChangesAsync();
         }
     }
 }

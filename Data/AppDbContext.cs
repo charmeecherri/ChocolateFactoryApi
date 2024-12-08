@@ -27,6 +27,14 @@ namespace ChocolateFactoryApi.Data
 
         public DbSet<Order> Orders { get; set; }
 
+        public DbSet<Warehouse> Warehouse { get; set; }
+
+        public DbSet<Maintanence> Maintanence { get; set; }
+
+        public DbSet<Analytics> Analytics { get; set; }
+
+        public DbSet<Notification> Notification { get; set; }
+
 
   
 
@@ -76,6 +84,16 @@ namespace ChocolateFactoryApi.Data
                 .HasOne(q => q.Batch)
                 .WithOne(p => p.Quality)
                 .HasForeignKey<Quality>(q => q.BatchId);
+
+            modelBuilder.Entity<Warehouse>()
+                .HasOne(w => w.user)
+                .WithMany(u => u.Warehouse)
+                .HasForeignKey(w => w.ManagerId);
+
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.User)
+                .WithMany(u => u.Notification)
+                .HasForeignKey(n => n.UserId);
 
 
         }

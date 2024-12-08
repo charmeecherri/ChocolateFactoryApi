@@ -13,6 +13,8 @@ namespace ChocolateFactoryApi.repositories.interfaces
 
         Task createIngredientsAsync(List<Ingredients> ingredients);
 
+        Task updateRecipeAsync(Recipe recipe);
+
         Task deleteRecipe(int id);
 
         AppDbContext getContext();

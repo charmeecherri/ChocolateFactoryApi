@@ -1,7 +1,6 @@
 ﻿using ChocolateFactoryApi.DTO.request;
 using ChocolateFactoryApi.Models;
 using ChocolateFactoryApi.repositories.interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChocolateFactoryApi.Controllers
@@ -54,6 +53,7 @@ namespace ChocolateFactoryApi.Controllers
                 }
                 catch(Exception e)
                 {
+                    await transaction.RollbackAsync();
                     if (e.InnerException != null)
                         return BadRequest(e.InnerException.Message);
                     else
@@ -79,6 +79,13 @@ namespace ChocolateFactoryApi.Controllers
             return Ok("Updated the quality status");
         }
 
+        [HttpDelete]
+        public async Task<IActionResult> deleteQuality(int id)
+        {
+            Quality quality = await _qualityRepository.getQualityByIdAsync(id);
+            await _qualityRepository.deleteQualityAsync(quality);
+            return Ok("deleted successfully");
 
+        }
     }
 }

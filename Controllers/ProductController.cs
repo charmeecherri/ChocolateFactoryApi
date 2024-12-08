@@ -35,6 +35,15 @@ namespace ChocolateFactoryApi.Controllers
             return StatusCode(StatusCodes.Status201Created,"Product is created");
         }
 
+        [HttpPut]
+        public async Task<IActionResult> updatePrduct(int id,string name)
+        {
+            Product product = await _productRepository.getProductByIdAsync(id);
+            product.ProductName = name;
+            await _productRepository.updateProductAsync(product);
+            return Ok("product is updated");
+        }
+
         [HttpDelete]
         public async Task<IActionResult> deleteProduct(int id)
         {

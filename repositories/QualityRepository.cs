@@ -19,9 +19,10 @@ namespace ChocolateFactoryApi.repositories
             await context.SaveChangesAsync();
         }
 
-        public Task deleteQualityAsync(Quality quality)
+        public async Task deleteQualityAsync(Quality quality)
         {
-            throw new NotImplementedException();
+            context.Quality.Update(quality);
+            await context.SaveChangesAsync();
         }
         
 

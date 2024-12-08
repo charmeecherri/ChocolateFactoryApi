@@ -8,6 +8,7 @@ namespace ChocolateFactoryApi.repositories.interfaces
         Task createPackageAsync(Packaging packaging);
 
         Task<List<PackagingResponseDto>> getPackagesAsync();
+        Task<Packaging> getpackagingByIdAsync(int id);
 
         Task updatePackagingAsync(Packaging packaging);
 
